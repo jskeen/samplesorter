@@ -87,7 +87,7 @@ class SampleSorter:
 
 				current_file = "%s/%s" %(root, name)
 
-				if re.search("^\.[^.]+|\.ini$|\.asd$", name):
+				if re.search("^\.[^.]+|\.ini$|\.asd|\.nkx$", name):
 					continue
 				# Do we have access?
 				if not os.access(current_file, os.R_OK):
@@ -109,8 +109,13 @@ class SampleSorter:
 				if not os.path.isdir(store_dir):
 					os.makedirs(store_dir)
 
-				shutil.copy2(current_file, "%s/%s" %(store_dir, name))
-				print "Copied %s -> %s" %(name, store_dir)
+				# only copy if the file doesn't exists
+				if os.path.isfile("%s/%s" %(store_dir, name)) is False:
+					shutil.copy2(current_file, "%s/%s" %(store_dir, name))
+					print "Copied %s -> %s" %(name, store_dir)
+
+				else: # skip
+					print "Skipped %s" % name
 
 		return True
 	# end read_files
